@@ -58,3 +58,30 @@ ES Modules として扱うように修正する。
   }
 }
 ```
+
+# アクセストークン認証のテスト
+jsonwebtokenでアクセストークン認証をする。
+
+## パッケージのインストール
+本体と秘密鍵を.envに保管する用のdotenvをインストールする。
+```
+npm install jsonwebtoken dotenv
+npm install -D @types/jsonwebtoken
+```
+
+## 秘密鍵を保存
+ターミナルでnode.jsの機能を使って秘密鍵（64byte）を生成する。自分で乱数を考えるなど、他の方法でも構わない。32byte以上を推奨。
+```
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
+`.env`ファイルをルートに作成して、秘密鍵を保存する。
+```
+ACCESS_TOKEN_SECRET=秘密鍵の文字列
+```
+Gitを使うときは、必ず`.gitignore`で除外しておく。忘れると秘密鍵が秘密鍵でなくなる！
+```
+node_modules/
+dist/
+.env
+```
