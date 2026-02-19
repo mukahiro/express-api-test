@@ -1,0 +1,19 @@
+### 変数の定義
+@baseUrl = http://localhost:3000
+
+# @name login
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "password"
+}
+
+### 変数 login から response body の accessToken を参照する
+@authToken = {{login.response.body.accessToken}}
+
+GET {{baseUrl}}/private HTTP/1.1
+Authorization: Bearer {{authToken}}
+
+GET {{baseUrl}}/public HTTP/1.1

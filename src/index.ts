@@ -10,18 +10,33 @@ app.use(express.json());
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || 'default_secret';
 
 // ログインのモック
-app.post('/login', (req, res) => {
-  const { username } = req.body;
-  const user = { name: username };
-  const accessToken = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' }); // トークン発行
-  res.json({ accessToken });
+app.post('/login', (req: AuthRequest, res) => {
+  const { username, password } = req.body;
+
+  // 本来はDBにアクセスしてユーザーを認証する
+  if (username == "admin" && password == "password") {
+    const user = { name: username };
+    const accessToken = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' }); // トークン発行
+    res.json({ accessToken });
+  } else {
+    res.json({
+      message: 'ログインに失敗しました',
+    });
+  }
 });
 
-// 保護されたルート
-app.get('/me', authenticateToken, (req: AuthRequest, res) => {
+// 制限ページ
+app.get('/private', authenticateToken, (req: AuthRequest, res) => {
   res.json({
-    message: '認証に成功しました',
+    message: '制限ページにアクセス完了',
     user: req.user
+  });
+});
+
+// 公開ページ
+app.get('/public', (req: AuthRequest, res) => {
+  res.json({
+    message: '公開されているページにアクセス完了',
   });
 });
 
